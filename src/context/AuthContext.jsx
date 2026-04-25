@@ -28,7 +28,7 @@ export const AuthProvider = ({ children }) => {
     }
 
     try {
-      const response = await api.get('/auth/me');
+      const response = await api.get('/api/auth/me');
       setAdmin(response.data);
     } catch (error) {
       Cookies.remove('admin_token');
@@ -38,7 +38,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const login = async (email, password) => {
-    const response = await api.post('/auth/login', { email, password });
+    const response = await api.post('/api/auth/login', { email, password });
     Cookies.set('admin_token', response.data.access_token, { expires: 1 });
     setAdmin(response.data.admin);
     return response.data;

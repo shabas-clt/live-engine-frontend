@@ -16,7 +16,7 @@ const Admins = () => {
 
   const fetchAdmins = async () => {
     try {
-      const response = await api.get('/admins');
+      const response = await api.get('/api/admins');
       setAdmins(response.data);
     } catch (error) {
       toast.error('Failed to fetch admins');
@@ -29,7 +29,7 @@ const Admins = () => {
     if (!confirm(`Delete admin "${adminName}"?`)) return;
 
     try {
-      await api.delete(`/admins/${adminId}`);
+      await api.delete(`/api/admins/${adminId}`);
       toast.success('Admin deleted successfully');
       fetchAdmins();
     } catch (error) {
@@ -39,7 +39,7 @@ const Admins = () => {
 
   const handleToggleStatus = async (adminId, adminName) => {
     try {
-      await api.patch(`/admins/${adminId}/toggle-status`);
+      await api.patch(`/api/admins/${adminId}/toggle-status`);
       toast.success(`Admin ${adminName} status updated`);
       fetchAdmins();
     } catch (error) {
@@ -190,7 +190,7 @@ const AdminModal = ({ onClose, onSuccess }) => {
     setLoading(true);
 
     try {
-      await api.post('/admins', formData);
+      await api.post('/api/admins', formData);
       toast.success('Admin created successfully');
       onSuccess();
     } catch (error) {

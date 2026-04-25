@@ -15,7 +15,7 @@ const Tokens = () => {
 
   const fetchTokens = async () => {
     try {
-      const response = await api.get('/tokens');
+      const response = await api.get('/api/tokens');
       setTokens(response.data);
     } catch (error) {
       toast.error('Failed to fetch tokens');
@@ -28,7 +28,7 @@ const Tokens = () => {
     if (!confirm(`Delete token "${tokenName}"?`)) return;
 
     try {
-      await api.delete(`/tokens/${tokenId}`);
+      await api.delete(`/api/tokens/${tokenId}`);
       toast.success('Token deleted successfully');
       fetchTokens();
     } catch (error) {
@@ -179,10 +179,10 @@ const TokenModal = ({ token, onClose, onSuccess }) => {
 
     try {
       if (token) {
-        await api.patch(`/tokens/${token.id}`, formData);
+        await api.patch(`/api/tokens/${token.id}`, formData);
         toast.success('Token updated successfully');
       } else {
-        await api.post('/tokens', formData);
+        await api.post('/api/tokens', formData);
         toast.success('Token added successfully');
       }
       onSuccess();

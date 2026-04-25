@@ -18,7 +18,7 @@ const Dashboard = () => {
     try {
       const [healthRes, statsRes] = await Promise.all([
         api.get('/health'),
-        api.get('/tokens/stats'),
+        api.get('/api/tokens/stats'),
       ]);
       setHealth(healthRes.data);
       setStats(statsRes.data);
