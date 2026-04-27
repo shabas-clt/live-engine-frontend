@@ -145,13 +145,25 @@ const Tokens = () => {
                   </div>
                 </td>
                 <td className="px-6 py-4 text-right">
-                  <button
-                    onClick={() => handleDelete(token.id, token.name)}
-                    className="text-red-600 hover:text-red-700 p-2"
-                    title="Delete"
-                  >
-                    <Trash2 size={18} />
-                  </button>
+                  <div className="flex items-center justify-end gap-2">
+                    <button
+                      onClick={() => {
+                        setEditingToken(token);
+                        setShowModal(true);
+                      }}
+                      className="text-blue-600 hover:text-blue-700 p-2"
+                      title="Edit"
+                    >
+                      <Edit2 size={18} />
+                    </button>
+                    <button
+                      onClick={() => handleDelete(token.id, token.name)}
+                      className="text-red-600 hover:text-red-700 p-2"
+                      title="Delete"
+                    >
+                      <Trash2 size={18} />
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))}
@@ -223,7 +235,8 @@ const TokenModal = ({ token, onClose, onSuccess }) => {
                 value={formData.token}
                 onChange={(e) => setFormData({ ...formData, token: e.target.value })}
                 required
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none pr-10"
+                disabled={!!token}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none pr-10 disabled:bg-gray-100 disabled:cursor-not-allowed"
                 placeholder="Your Tiingo API token"
               />
               <button
@@ -234,6 +247,9 @@ const TokenModal = ({ token, onClose, onSuccess }) => {
                 {showToken ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
             </div>
+            {token && (
+              <p className="text-xs text-gray-500 mt-1">Token cannot be changed after creation</p>
+            )}
           </div>
 
           <div>
