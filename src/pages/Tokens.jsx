@@ -8,6 +8,7 @@ const Tokens = () => {
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [editingToken, setEditingToken] = useState(null);
+  const [visibleTokens, setVisibleTokens] = useState(new Set());
 
   useEffect(() => {
     fetchTokens();
@@ -22,6 +23,21 @@ const Tokens = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const toggleTokenVisibility = (tokenId) => {
+    const newVisible = new Set(visibleTokens);
+    if (newVisible.has(tokenId)) {
+      newVisible.delete(tokenId);
+    } else {
+      newVisible.add(tokenId);
+    }
+    setVisibleTokens(newVisible);
+  };
+
+  const maskToken = (token) => {
+    if (token.length <= 12) return '*'.repeat(token.length);
+    return `${token.slice(0, 8)}...${token.slice(-4)}`;
   };
 
   const handleDelete = async (tokenId, tokenName) => {
@@ -74,9 +90,6 @@ const Tokens = () => {
                 Token
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                Assigned To
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                 Status
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
@@ -99,16 +112,18 @@ const Tokens = () => {
                   </div>
                 </td>
                 <td className="px-6 py-4">
-                  <code className="text-sm bg-gray-100 px-2 py-1 rounded">{token.token}</code>
-                </td>
-                <td className="px-6 py-4">
-                  {token.assigned_to ? (
-                    <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded text-sm">
-                      {token.assigned_to}
-                    </span>
-                  ) : (
-                    <span className="text-gray-400">Unassigned</span>
-                  )}
+                  <div className="flex items-center gap-2">
+                    <code className="text-sm bg-gray-100 px-2 py-1 rounded">
+                      {visibleTokens.has(token.id) ? token.token : maskToken(token.token)}
+                    </code>
+                    <button
+                      onClick={() => toggleTokenVisibility(token.id)}
+                      className="text-gray-500 hover:text-gray-700 p-1"
+                      title={visibleTokens.has(token.id) ? 'Hide token' : 'Show token'}
+                    >
+                      {visibleTokens.has(token.id) ? <EyeOff size={16} /> : <Eye size={16} />}
+                    </button>
+                  </div>
                 </td>
                 <td className="px-6 py-4">
                   <span
@@ -168,7 +183,6 @@ const TokenModal = ({ token, onClose, onSuccess }) => {
     token: token?.token || '',
     name: token?.name || '',
     description: token?.description || '',
-    assigned_to: token?.assigned_to || '',
   });
   const [loading, setLoading] = useState(false);
   const [showToken, setShowToken] = useState(false);
@@ -243,24 +257,8 @@ const TokenModal = ({ token, onClose, onSuccess }) => {
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
-              placeholder="Primary token for BTC"
+              placeholder="Primary token for data collection"
             />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Assign To (Optional)
-            </label>
-            <select
-              value={formData.assigned_to}
-              onChange={(e) => setFormData({ ...formData, assigned_to: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none"
-            >
-              <option value="">Unassigned</option>
-              <option value="bitcoin">Bitcoin</option>
-              <option value="gold">Gold</option>
-              <option value="silver">Silver</option>
-            </select>
           </div>
 
           <div className="flex gap-3 pt-4">
