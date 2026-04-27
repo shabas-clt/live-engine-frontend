@@ -235,8 +235,7 @@ const TokenModal = ({ token, onClose, onSuccess }) => {
                 value={formData.token}
                 onChange={(e) => setFormData({ ...formData, token: e.target.value })}
                 required
-                disabled={!!token}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none pr-10 disabled:bg-gray-100 disabled:cursor-not-allowed"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none pr-10"
                 placeholder="Your Tiingo API token"
               />
               <button
@@ -247,9 +246,6 @@ const TokenModal = ({ token, onClose, onSuccess }) => {
                 {showToken ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
             </div>
-            {token && (
-              <p className="text-xs text-gray-500 mt-1">Token cannot be changed after creation</p>
-            )}
           </div>
 
           <div>
